@@ -3,23 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>背景隨鼠標移動</title>
+  <title>互動作品集</title>
   <style>
+    /* 全局樣式 */
     body {
       margin: 0;
       height: 100vh;
       background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
       background-size: 300% 300%;
-      transition: background-position 0.1s;
+      font-family: Arial, sans-serif;
+      color: white;
+      overflow: hidden; /* 隱藏多餘內容 */
+      cursor: none; /* 隱藏默認游標 */
+    }
+
+    /* 漸變背景動畫 */
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    body {
+      animation: gradientBG 10s ease infinite;
+    }
+
+    /* 滑鼠跟隨光圈 */
+    .cursor {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ff9a9e, #fad0c4);
+      pointer-events: none;
+      mix-blend-mode: difference;
+      transform: translate(-50%, -50%);
+      transition: transform 0.05s linear;
+    }
+
+    /* 中心文字區域 */
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .content h1 {
+      font-size: 4rem;
+      background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientText 3s ease infinite;
+      margin: 0;
+    }
+
+    @keyframes gradientText {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .content p {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .content p:hover {
+      color: #fbc2eb;
+    }
+
+    /* 漸變按鈕 */
+    .button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      color: white;
+      background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      background-size: 200% 200%;
+      transition: background-position 0.3s ease;
+    }
+
+    .button:hover {
+      background-position: 100% 0%;
     }
   </style>
 </head>
 <body>
+  <!-- 滑鼠跟隨光圈 -->
+  <div class="cursor"></div>
+
+  <!-- 中心內容 -->
+  <div class="content">
+    <h1>歡迎來到我的作品集</h1>
+    <p>這是我的第一個互動網站</p>
+    <button class="button">點擊探索更多</button>
+  </div>
+
   <script>
+    // 滑鼠跟隨光圈
+    const cursor = document.querySelector('.cursor');
     document.addEventListener('mousemove', (e) => {
-      const x = e.clientX / window.innerWidth;
-      const y = e.clientY / window.innerHeight;
-      document.body.style.backgroundPosition = `${x * 100}% ${y * 100}%`;
+      cursor.style.left = `${e.pageX}px`;
+      cursor.style.top = `${e.pageY}px`;
+    });
+
+    // 按鈕點擊事件（可以自定義功能）
+    const button = document.querySelector('.button');
+    button.addEventListener('click', () => {
+      alert('更多功能即將到來！');
     });
   </script>
 </body>
