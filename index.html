@@ -115,6 +115,9 @@
         lineObj.y1 += lineObj.speedY;
         lineObj.x2 += lineObj.speedX;
         lineObj.y2 += lineObj.speedY;
+        
+function draw() {
+  background(0, 30); // 半透明背景，創造拖影效果
 
         // 碰到邊界反彈
         if (lineObj.x1 < 0 || lineObj.x1 > width || lineObj.x2 < 0 || lineObj.x2 > width) {
