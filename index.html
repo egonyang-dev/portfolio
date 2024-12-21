@@ -99,7 +99,7 @@
     new p5(sketch2); // 創建第二個 p5 實例
 
     // WebGL 畫布與 Shader
-    let vertexShader = 
+    let vertexShader = `
       precision highp float;
 
       attribute vec3 aPosition;
@@ -115,9 +115,9 @@
         gl_Position = uProjectionMatrix * viewModelPosition;  
         vTexCoord = aTexCoord;
       }
-    ;
+    `;
 
-    let fragmentShader = 
+    let fragmentShader = `
       precision mediump float;
 
       uniform vec2 resolution;
@@ -131,7 +131,7 @@
         st = fract(st * 10.0);
         gl_FragColor = vec4(vec3(dist), 1.0);
       }
-    ;
+    `;
 
     function sketch3(p) {
       let theShader;
