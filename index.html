@@ -7,6 +7,7 @@
   <style>
     body {
       margin: 0;
+      height: 100vh;
       display: flex;
       flex-direction: column; /* 垂直排列多個畫布 */
       justify-content: center;
@@ -69,7 +70,7 @@
   <div class="dynamic-text">Yang Yu Guang Portfolio</div>
 
   <script>
-    // 第一個畫布
+    // 第一個 p5.js 畫布
     function sketch1(p) {
       p.setup = function () {
         p.createCanvas(720, 200);
@@ -83,7 +84,7 @@
     }
     new p5(sketch1); // 創建第一個 p5 實例
 
-    // 第二個畫布
+    // 第二個 p5.js 畫布
     function sketch2(p) {
       p.setup = function () {
         p.createCanvas(720, 200);
@@ -97,29 +98,60 @@
     }
     new p5(sketch2); // 創建第二個 p5 實例
 
-    // 第三個空白畫布
+    // WebGL 畫布與 Shader
+    let vertexShader = `
+      precision highp float;
+
+      attribute vec3 aPosition;
+      attribute vec2 aTexCoord;
+
+      uniform mat4 uModelViewMatrix;
+      uniform mat4 uProjectionMatrix;
+
+      varying vec2 vTexCoord;
+
+      void main() {
+        vec4 viewModelPosition = uModelViewMatrix * vec4(aPosition, 1.0);
+        gl_Position = uProjectionMatrix * viewModelPosition;  
+        vTexCoord = aTexCoord;
+      }
+    `;
+
+    let fragmentShader = `
+      precision mediump float;
+
+      uniform vec2 resolution;
+      uniform float time;
+      uniform vec2 mouse;
+      varying vec2 vTexCoord;
+
+      void main (void) {
+        vec2 st = vTexCoord;
+        float dist = distance(st, vec2(sin(time), cos(time)));
+        st = fract(st * 10.0);
+        gl_FragColor = vec4(vec3(dist), 1.0);
+      }
+    `;
+
     function sketch3(p) {
+      let theShader;
+
       p.setup = function () {
-        p.createCanvas(720, 200);
-        p.background(0); // 黑色背景
+        p.createCanvas(720, 200, p.WEBGL);
+        theShader = p.createShader(vertexShader, fragmentShader);
+        p.noStroke();
       };
+
       p.draw = function () {
-        // 空白畫布，無其他內容
+        p.background(0);
+        theShader.setUniform('resolution', [p.width, p.height]);
+        theShader.setUniform('time', p.millis() / 1000.0);
+        theShader.setUniform('mouse', [p.mouseX, p.mouseY]);
+        p.shader(theShader);
+        p.rect(-p.width / 2, -p.height / 2, p.width, p.height);
       };
     }
     new p5(sketch3); // 創建第三個 p5 實例
-
-    // 第四個空白畫布
-    function sketch4(p) {
-      p.setup = function () {
-        p.createCanvas(720, 200);
-        p.background(255); // 白色背景
-      };
-      p.draw = function () {
-        // 空白畫布，無其他內容
-      };
-    }
-    new p5(sketch4); // 創建第四個 p5 實例
   </script>
 </body>
 </html>
