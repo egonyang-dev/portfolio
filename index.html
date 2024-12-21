@@ -62,12 +62,32 @@
           0 0 20px rgba(255, 255, 255, 0.4),
           0 0 30px rgba(255, 255, 255, 0.2);
       }
+      .next-page-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: white;
+      color: black;
+      border: none;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .next-page-btn:hover {
+      background-color: gray;
+      color: white;
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
 </head>
 <body>
   <div class="dynamic-text">Yang Yu Guang Portfolio</div>
+
+    <!-- 下一頁按鈕 -->
+  <button class="next-page-btn" onclick="window.location.href='next.html'">Next Page</button>
 
   <script>
     // 第一個 p5.js 畫布
@@ -155,3 +175,72 @@
   </script>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Next Page</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #000; /* 黑色背景 */
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      overflow: hidden;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: auto;
+      border: 2px solid white;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.1);
+    }
+
+    .back-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: white;
+      color: black;
+      border: none;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      background-color: gray;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="gallery">
+    <img src="https://via.placeholder.com/300" alt="Image 1">
+    <img src="https://via.placeholder.com/300" alt="Image 2">
+    <img src="https://via.placeholder.com/300" alt="Image 3">
+    <img src="https://via.placeholder.com/300" alt="Image 4">
+  </div>
+
+  <button class="back-btn" onclick="window.location.href='index.html'">Back to Home</button>
+</body>
+</html>
+
