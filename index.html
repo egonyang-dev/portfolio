@@ -3,50 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>滑鼠跟隨光圈效果</title>
+  <title>漸變文字動畫</title>
   <style>
     body {
       margin: 0;
       height: 100vh;
-      overflow: hidden;
-      background: #111;
-      cursor: none; /* 隱藏預設游標 */
       display: flex;
       justify-content: center;
       align-items: center;
-      color: white;
+      background: #111;
       font-family: Arial, sans-serif;
-    }
-
-    .cursor {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #ff9a9e, #fad0c4);
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      mix-blend-mode: difference;
-      transition: transform 0.1s linear;
+      color: white;
     }
 
     h1 {
-      text-align: center;
-      font-size: 3rem;
-      z-index: 1;
+      font-size: 4rem;
+      background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+      background-size: 200% 200%;
+      animation: gradientText 3s ease infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    @keyframes gradientText {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
   </style>
 </head>
 <body>
-  <div class="cursor"></div>
-  <h1>我的作品集</h1>
-
-  <script>
-    const cursor = document.querySelector('.cursor');
-    document.addEventListener('mousemove', (e) => {
-      cursor.style.left = `${e.pageX}px`;
-      cursor.style.top = `${e.pageY}px`;
-    });
-  </script>
+  <h1>時尚漸變文字</h1>
 </body>
 </html>
