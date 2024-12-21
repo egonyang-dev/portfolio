@@ -74,11 +74,20 @@
     let bgColor1 = 50; // 漸變灰色起點
     let bgColor2 = 255; // 漸變白色終點
     let gradientSpeed = 5; // 背景漸變速度
-    let lines = []; // 隨機線條
 
-    function setup() {
-      createCanvas(windowWidth, windowHeight);
-      background(0);
+function draw() {
+  // 背景漸變效果
+  for (let y = 0; y < height; y++) {
+    let inter = map(y, 0, height, bgColor1, bgColor2);
+    stroke(inter);
+    line(0, y, width, y);
+  }
+
+  // 不斷漸變，值循環在 0-255 之間
+  bgColor1 = (bgColor1 + gradientSpeed) % 256; // 保持在範圍內
+  bgColor2 = (bgColor2 + gradientSpeed) % 256; // 保持在範圍內
+}
+
 
       // 初始化隨機線條
       for (let i = 0; i < 10; i++) {
