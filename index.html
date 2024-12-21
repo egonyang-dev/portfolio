@@ -13,9 +13,7 @@
       align-items: center;
       background: #000; /* 純黑背景 */
       font-family: Arial, sans-serif;
-      overflow-x: hidden; /* 隱藏水平滾動 */
-      overflow-y: auto; /* 啟用垂直滾動 */
-      padding-bottom: 100px; /* 增加底部空間 */
+      overflow: hidden;
     }
 
     canvas {
@@ -24,9 +22,9 @@
     }
 
     .dynamic-text {
-      position: fixed; /* 固定文字位置 */
-      top: 50%; /* 垂直居中 */
-      left: 50%; /* 水平居中 */
+      position: absolute;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
       font-size: 2rem;
       text-transform: uppercase;
@@ -38,7 +36,6 @@
         0 0 20px rgba(255, 255, 255, 0.6),
         0 0 30px rgba(255, 255, 255, 0.4),
         0 0 40px rgba(255, 255, 255, 0.2);
-      z-index: 1;
     }
 
     @keyframes blurAnimation {
