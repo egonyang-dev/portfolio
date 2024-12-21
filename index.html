@@ -7,43 +7,63 @@
   <style>
     body {
       margin: 0;
+      display: flex;
+      flex-direction: column; /* 垂直排列多個畫布 */
+      justify-content: center;
+      align-items: center;
+      background: #000; /* 純黑背景 */
       font-family: Arial, sans-serif;
-      background: #000; /* 頁面背景為黑色 */
-      color: white;
+      overflow-x: hidden; /* 隱藏水平滾動 */
+      overflow-y: auto; /* 啟用垂直滾動 */
+      padding-bottom: 100px; /* 增加底部空間 */
+    }
+
+    canvas {
+      display: block;
+      margin: 10px;
     }
 
     .dynamic-text {
-      position: fixed; /* 固定在畫面上方 */
-      top: 20px; /* 距離頁面頂部 */
-      left: 50%;
-      transform: translateX(-50%);
+      position: fixed; /* 固定文字位置 */
+      top: 50%; /* 垂直居中 */
+      left: 50%; /* 水平居中 */
+      transform: translate(-50%, -50%);
       font-size: 2rem;
       text-transform: uppercase;
       text-align: center;
       color: white;
+      animation: blurAnimation 9.5s infinite;
       text-shadow: 
         0 0 10px rgba(255, 255, 255, 0.8),
         0 0 20px rgba(255, 255, 255, 0.6),
         0 0 30px rgba(255, 255, 255, 0.4),
         0 0 40px rgba(255, 255, 255, 0.2);
+      z-index: 1;
     }
 
-    .canvas-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    canvas {
-      display: block;
-      margin: 20px 0; /* 上下間距 */
-    }
-
-    .extra-section {
-      width: 100%;
-      height: 600px; /* 額外的黑色背景長度 */
-      background: #000; /* 純黑色背景 */
+    @keyframes blurAnimation {
+      0% {
+        text-shadow: 
+          0 0 5px rgba(255, 255, 255, 0.8),
+          0 0 10px rgba(255, 255, 255, 0.6),
+          0 0 20px rgba(255, 255, 255, 0.4),
+          0 0 30px rgba(255, 255, 255, 0.2);
+      }
+      50% {
+        text-shadow: 
+          0 0 20px rgba(255, 255, 255, 0.8),
+          0 0 40px rgba(255, 255, 255, 0.6),
+          0 0 60px rgba(255, 255, 255, 0.4),
+          0 0 80px rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%) scale(1.0);
+      }
+      100% {
+        text-shadow: 
+          0 0 5px rgba(255, 255, 255, 0.8),
+          0 0 10px rgba(255, 255, 255, 0.6),
+          0 0 20px rgba(255, 255, 255, 0.4),
+          0 0 30px rgba(255, 255, 255, 0.2);
+      }
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
@@ -51,63 +71,58 @@
 <body>
   <div class="dynamic-text">Yang Yu Guang Portfolio</div>
 
-  <div class="canvas-container">
-    <script>
-      // 第一個畫布
-      function sketch1(p) {
-        p.setup = function () {
-          p.createCanvas(720, 200);
-          p.background(0); // 黑色背景
-        };
-        p.draw = function () {
-          p.fill(255); // 白色填充
-          p.noStroke();
-          p.circle(p.mouseX, p.mouseY, 50); // 滑鼠移動時繪製圓形
-        };
-      }
-      new p5(sketch1); // 創建第一個 p5 實例
+  <script>
+    // 第一個畫布
+    function sketch1(p) {
+      p.setup = function () {
+        p.createCanvas(720, 200);
+        p.background(0); // 黑色背景
+      };
+      p.draw = function () {
+        p.fill(255); // 白色填充
+        p.noStroke();
+        p.circle(p.mouseX, p.mouseY, 50); // 滑鼠移動時繪製圓形
+      };
+    }
+    new p5(sketch1); // 創建第一個 p5 實例
 
-      // 第二個畫布
-      function sketch2(p) {
-        p.setup = function () {
-          p.createCanvas(720, 200);
-          p.background(255); // 白色背景
-          p.fill(0); // 黑色填充
-          p.stroke(255); // 白色邊框
-        };
-        p.draw = function () {
-          p.square(p.mouseX, p.mouseY, 50); // 滑鼠移動時繪製正方形
-        };
-      }
-      new p5(sketch2); // 創建第二個 p5 實例
+    // 第二個畫布
+    function sketch2(p) {
+      p.setup = function () {
+        p.createCanvas(720, 200);
+        p.background(255); // 白色背景
+        p.fill(0); // 黑色填充
+        p.stroke(255); // 白色邊框
+      };
+      p.draw = function () {
+        p.square(p.mouseX, p.mouseY, 50); // 滑鼠移動時繪製正方形
+      };
+    }
+    new p5(sketch2); // 創建第二個 p5 實例
 
-      // 第三個空白畫布
-      function sketch3(p) {
-        p.setup = function () {
-          p.createCanvas(720, 200);
-          p.background(0); // 黑色背景
-        };
-        p.draw = function () {
-          // 空白畫布，無其他內容
-        };
-      }
-      new p5(sketch3); // 創建第三個 p5 實例
+    // 第三個空白畫布
+    function sketch3(p) {
+      p.setup = function () {
+        p.createCanvas(720, 200);
+        p.background(0); // 黑色背景
+      };
+      p.draw = function () {
+        // 空白畫布，無其他內容
+      };
+    }
+    new p5(sketch3); // 創建第三個 p5 實例
 
-      // 第四個空白畫布
-      function sketch4(p) {
-        p.setup = function () {
-          p.createCanvas(720, 200);
-          p.background(255); // 白色背景
-        };
-        p.draw = function () {
-          // 空白畫布，無其他內容
-        };
-      }
-      new p5(sketch4); // 創建第四個 p5 實例
-    </script>
-  </div>
-
-  <!-- 額外的黑色背景 -->
-  <div class="extra-section"></div>
+    // 第四個空白畫布
+    function sketch4(p) {
+      p.setup = function () {
+        p.createCanvas(720, 200);
+        p.background(255); // 白色背景
+      };
+      p.draw = function () {
+        // 空白畫布，無其他內容
+      };
+    }
+    new p5(sketch4); // 創建第四個 p5 實例
+  </script>
 </body>
 </html>
