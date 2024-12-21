@@ -3,28 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的作品集</title>
+  <title>滑鼠跟隨光圈效果</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f4f4f4;
       margin: 0;
-      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: #111;
+      cursor: none; /* 隱藏預設游標 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-family: Arial, sans-serif;
     }
+
+    .cursor {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ff9a9e, #fad0c4);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+      transition: transform 0.1s linear;
+    }
+
     h1 {
-      color: #333;
-      margin-top: 50px;
-    }
-    a {
-      color: #007bff;
-      text-decoration: none;
+      text-align: center;
+      font-size: 3rem;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
-  <h1>歡迎來到我的作品集</h1>
-  <p>這是我的第一個 GitHub Pages 網站！</p>
-  <p><a href="https://example.com">點擊這裡瀏覽我的作品</a></p>
+  <div class="cursor"></div>
+  <h1>我的作品集</h1>
+
+  <script>
+    const cursor = document.querySelector('.cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = `${e.pageX}px`;
+      cursor.style.top = `${e.pageY}px`;
+    });
+  </script>
 </body>
 </html>
