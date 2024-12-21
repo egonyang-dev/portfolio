@@ -120,6 +120,39 @@
     button.addEventListener('click', () => {
       alert('更多功能即將到來！');
     });
+    
+     // p5.js 繪圖功能
+    function setup() {
+      createCanvas(windowWidth, windowHeight); // 畫布大小自適應
+      angleMode(DEGREES); // 設定角度單位為度數
+
+      background(220); // 畫布背景顏色
+
+      // 繪製正方形
+      square(20, 20, 100);
+
+      // 繪製矩形
+      rect(100, 40, 200, 100);
+
+      // 繪製眼睛形狀
+      ellipse(540, 100, 300, 100); // 外眼形狀
+      circle(560, 100, 100); // 瞳孔
+      arc(540, 100, 300, 100, 180, 360, CHORD); // 眼皮
+
+      // 繪製線條
+      line(20, 200, 200, 350);
+
+      // 繪製三角形
+      triangle(250, 350, 350, 200, 450, 350);
+
+      // 繪製四邊形
+      quad(500, 250, 550, 200, 700, 300, 650, 350);
+    }
+
+    // 確保畫布尺寸跟隨視窗大小調整
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+    }
   </script>
 </body>
 </html>
