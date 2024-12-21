@@ -32,11 +32,11 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 5rem;
+      font-size: 8rem;
       text-transform: uppercase;
       text-align: center;
       color: white;
-      animation: blurAnimation 5.5s infinite;
+      animation: blurAnimation 9.5s infinite;
       text-shadow: 
         0 0 10px rgba(255, 255, 255, 0.8),
         0 0 20px rgba(255, 255, 255, 0.6),
@@ -96,21 +96,6 @@
         });
       }
     }
-
-    function draw() {
-      // 清除畫布以防止疊加導致閃爍
-      background(0); 
-
-      // 背景漸變效果
-      for (let y = 0; y < height; y++) {
-        let inter = map(y, 0, height, bgColor1, bgColor2);
-        stroke(inter);
-        line(0, y, width, y);
-      }
-
-      // 不斷更新背景漸變
-      bgColor1 = (bgColor1 + gradientSpeed) % 256;
-      bgColor2 = (bgColor2 + gradientSpeed) % 256;
 
       // 隨機線條效果
       stroke(255, 100); // 白色線條，帶透明度
@@ -231,6 +216,38 @@ document.addEventListener('mousemove', (e) => {
         p.createCanvas(720, 200);
         p.background(255); // 白色背景
         p.fill(0); // 黑色填充
+        p.stroke(255); // 白色邊框
+      };
+      p.draw = function () {
+        p.square(p.mouseX, p.mouseY, 50);
+      };
+    }
+
+    // Run second p5 instance
+    new p5(sketch2);
+    <script>
+    // Function for first canvas
+    function sketch1(p) {
+      p.setup = function () {
+        p.createCanvas(720, 200);
+        p.background(0); // 黑色背景
+      };
+      p.draw = function () {
+        p.fill(255); // 白色填充
+        p.noStroke();
+        p.circle(p.mouseX, p.mouseY, 50);
+      };
+    }
+
+    // Run first p5 instance
+    new p5(sketch1);
+
+    // Function for second canvas
+    function sketch2(p) {
+      p.setup = function () {
+        p.createCanvas(720, 200);
+        p.background(0); // 黑色背景
+        p.fill(255); // 白色填充
         p.stroke(255); // 白色邊框
       };
       p.draw = function () {
