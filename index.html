@@ -17,6 +17,14 @@
       color: white;
     }
 
+    canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0; /* 確保畫布在最底層 */
+}
+
     /* 動態模糊文字效果 */
     .dynamic-text {
       position: absolute;
@@ -27,12 +35,13 @@
       text-transform: uppercase;
       text-align: center;
       color: white;
-      animation: blurAnimation 1.5s infinite;
+      animation: blurAnimation 5.5s infinite;
      text-shadow: none;
+      z-index: 1; 
     }
 
     @keyframes blurAnimation {
-      0% {
+      10% {
         text-shadow: 
           0 0 5px rgba(255, 255, 255, 0.8),
           0 0 10px rgba(255, 255, 255, 0.6),
@@ -46,7 +55,7 @@
           0 0 40px rgba(255, 255, 255, 0.6),
           0 0 60px rgba(255, 255, 255, 0.4),
           0 0 80px rgba(255, 255, 255, 0.2);
-        transform: translate(-50%, -50%) scale(1.05); /* 稍微放大效果 */
+        transform: translate(-50%, -50%) scale(0.05); /* 稍微放大效果 */
       }
       100% {
         text-shadow: 
@@ -57,12 +66,27 @@
         transform: translate(-50%, -50%);
       }
     }
+ </style>
+</head>
+<body>
+  <div class="dynamic-text">Yang Yu Guang Portfolio</div>
+  <script>
+    const dynamicText = document.querySelector('.dynamic-text');
 
+    // 監聽滑鼠移動事件
+    document.addEventListener('mousemove', (e) => {
+      const { clientX, clientY } = e;
+
+      // 設定文字的位置偏移和顏色
+      dynamicText.style.transform = `translate(-50%, -50%) translate(${clientX / 50}px, ${clientY / 50}px)`;
+      dynamicText.style.color = `rgb(${clientX % 255}, ${clientY % 255}, ${(clientX + clientY) % 255})`;
+    });
     canvas {
       display: block;
       position: absolute;
       top: 0;
       left: 0;
+      z-index: 0;
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
@@ -73,7 +97,7 @@
   <script>
     let bgColor1 = 50; // 漸變灰色起點
     let bgColor2 = 255; // 漸變白色終點
-    let gradientSpeed = 5; // 背景漸變速度
+    let gradientSpeed = 10; // 背景漸變速度
 
 function draw() {
   // 背景漸變效果
