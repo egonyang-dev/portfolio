@@ -97,6 +97,9 @@
     }
 
     function draw() {
+      // 清除畫布以防止疊加導致閃爍
+      background(0); 
+
       // 背景漸變效果
       for (let y = 0; y < height; y++) {
         let inter = map(y, 0, height, bgColor1, bgColor2);
@@ -135,14 +138,76 @@
     }
 
     // 游標互動：讓文字跟隨滑鼠
-    const dynamicText = document.querySelector('.dynamic-text');
-    document.addEventListener('mousemove', (e) => {
-      const { clientX, clientY } = e;
+   const dynamicText = document.querySelector('.dynamic-text');
+document.addEventListener('mousemove', (e) => {
+  const { clientX, clientY } = e;
 
-      // 設定文字偏移與顏色動態變化
-      dynamicText.style.transform = `translate(-50%, -50%) translate(${clientX / 50}px, ${clientY / 50}px)`;
-      dynamicText.style.color = `rgb(${clientX % 255}, ${clientY % 255}, ${(clientX + clientY) % 255})`;
-    });
+  // 計算灰階顏色值，範圍在 0 (黑) 到 255 (白)
+  const grayValue = Math.floor(((clientX + clientY) / (window.innerWidth + window.innerHeight)) * 255);
+
+  // 設定文字偏移與灰階顏色
+  dynamicText.style.transform = `translate(-50%, -50%) translate(${clientX / 50}px, ${clientY / 50}px)`;
+  dynamicText.style.color = `rgb(${grayValue}, ${grayValue}, ${grayValue})`; // 灰階顏色
+  let vertexShader = `
+      precision highp float;
+
+      attribute vec3 aPosition;
+      attribute vec2 aTexCoord;
+
+      uniform mat4 uModelViewMatrix;
+      uniform mat4 uProjectionMatrix;
+
+      varying vec2 vTexCoord;
+
+      void main() {
+        vec4 viewModelPosition = uModelViewMatrix * vec4(aPosition, 1.0);
+        gl_Position = uProjectionMatrix * viewModelPosition;  
+        vTexCoord = aTexCoord;
+      }
+    `;
+
+    let fragmentShader = `
+      precision mediump float;
+
+      #define PI 3.14159265358979323846
+
+      uniform vec2 resolution;
+      uniform float time;
+      uniform vec2 mouse;
+      varying vec2 vTexCoord;
+
+      void main (void) {
+        vec2 st = vTexCoord;
+        float dist = distance(st, vec2(sin(time), cos(time)));
+        st = fract(st * 10.0);
+        gl_FragColor = vec4(vec3(dist), 1.0);
+      }
+    `;
+
+    let theShader;
+
+    function setup() {
+      createCanvas(windowWidth, windowHeight, WEBGL);
+
+      noStroke();
+      theShader = createShader(vertexShader, fragmentShader);
+    }
+
+    function draw() {
+      background(0);
+
+      theShader.setUniform('resolution', [width, height]);
+      theShader.setUniform('time', millis() / 1000.0);
+      theShader.setUniform('mouse', [mouseX, mouseY]);
+
+      shader(theShader);
+      rect(-width / 2, -height / 2, width, height);
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+    }
+});
   </script>
 </body>
 </html>
