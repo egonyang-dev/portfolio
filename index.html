@@ -5,122 +5,135 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>互動作品集</title>
   <style>
-    /* 全局樣式 */
     body {
       margin: 0;
       height: 100vh;
-      background: linear-gradient(45deg, #040000, #ffffff, #40000, #ffffff);
-      background-size: 300% 300%;
+      overflow: hidden; /* 隱藏滾動條 */
+      background: #000;
+      color: white;
       font-family: Arial, sans-serif;
-      color: white;
-      overflow: hidden; /* 隱藏多餘內容 */
-      cursor: none; /* 隱藏默認游標 */
     }
 
-    /* 漸變背景動畫 */
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    body {
-      animation: gradientBG 10s ease infinite;
-    }
-
-    /* 滑鼠跟隨光圈 */
-    .cursor {
+    canvas {
+      display: block;
       position: absolute;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #ff9a9e, #fad0c4);
-      pointer-events: none;
-      mix-blend-mode: difference;
-      transform: translate(-50%, -50%);
-      transition: transform 0.05s linear;
+      top: 0;
+      left: 0;
     }
 
-    /* 中心文字區域 */
-    .content {
+    .controls {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
     }
 
-    .content h1 {
-      font-size: 4rem;
-      background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientText 3s ease infinite;
-      margin: 0;
-    }
-
-    @keyframes gradientText {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .content p {
-      font-size: 1.2rem;
-      margin-top: 10px;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-
-    .content p:hover {
-      color: #fbc2eb;
-    }
-
-    /* 漸變按鈕 */
-    .button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 1.2rem;
-      color: white;
+    button {
       background: linear-gradient(45deg, #ff9a9e, #fad0c4);
       border: none;
-      border-radius: 30px;
+      border-radius: 5px;
+      color: white;
+      font-size: 1rem;
+      padding: 10px 20px;
       cursor: pointer;
-      background-size: 200% 200%;
-      transition: background-position 0.3s ease;
+      margin: 5px 0;
     }
 
-    .button:hover {
-      background-position: 100% 0%;
+    button:hover {
+      background: linear-gradient(45deg, #fbc2eb, #a18cd1);
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
 </head>
 <body>
-  <!-- 滑鼠跟隨光圈 -->
-  <div class="cursor"></div>
-
-  <!-- 中心內容 -->
-  <div class="content">
-    <h1>歡迎來到我的作品集</h1>
-    <p>這是我的第一個互動網站</p>
-    <button class="button">點擊探索更多</button>
+  <div class="controls">
+    <button id="toggle-shape">切換圖形</button>
+    <button id="change-color">改變顏色</button>
   </div>
-
   <script>
-    // 滑鼠跟隨光圈
-    const cursor = document.querySelector('.cursor');
-    document.addEventListener('mousemove', (e) => {
-      cursor.style.left = `${e.pageX}px`;
-      cursor.style.top = `${e.pageY}px`;
-    });
+    let bgColor1 = 50; // 漸變灰色起點
+    let bgColor2 = 255; // 漸變白色終點
+    let gradientSpeed = 5; // 背景漸變速度
+    let drawShape = true; // 控制圖形
+    let shapeColor = 255; // 初始圖形顏色
+    let lines = []; // 存放隨機線條
 
-    // 按鈕點擊事件（可以自定義功能）
-    const button = document.querySelector('.button');
-    button.addEventListener('click', () => {
-      alert('更多功能即將到來！');
-    });
-    
+    // 初始化畫布
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      angleMode(DEGREES);
+
+      // 創建一些隨機線條
+      for (let i = 0; i < 10; i++) {
+        lines.push({
+          x1: random(width),
+          y1: random(height),
+          x2: random(width),
+          y2: random(height),
+          speedX: random(-2, 2),
+          speedY: random(-2, 2),
+        });
+      }
+
+      // 綁定按鈕事件
+      document.getElementById('toggle-shape').addEventListener('click', () => {
+        drawShape = !drawShape; // 切換圖形
+      });
+
+      document.getElementById('change-color').addEventListener('click', () => {
+        shapeColor = color(random(255), random(255), random(255)); // 隨機改變圖形顏色
+      });
+    }
+
+    // 動態繪圖
+    function draw() {
+      // 背景漸變
+      for (let y = 0; y < height; y++) {
+        let inter = map(y, 0, height, bgColor1, bgColor2);
+        stroke(inter);
+        line(0, y, width, y);
+      }
+      bgColor1 += gradientSpeed; // 改變灰色
+      bgColor2 -= gradientSpeed; // 改變白色
+      if (bgColor1 > 255 || bgColor2 < 50) gradientSpeed *= -1; // 漸變反轉
+
+      // 繪製隨機線條
+      stroke(255, 100); // 半透明白色
+      strokeWeight(1);
+      for (let lineObj of lines) {
+        line(lineObj.x1, lineObj.y1, lineObj.x2, lineObj.y2);
+
+        // 更新線條位置
+        lineObj.x1 += lineObj.speedX;
+        lineObj.y1 += lineObj.speedY;
+        lineObj.x2 += lineObj.speedX;
+        lineObj.y2 += lineObj.speedY;
+
+        // 碰到邊界反彈
+        if (lineObj.x1 < 0 || lineObj.x1 > width || lineObj.x2 < 0 || lineObj.x2 > width) {
+          lineObj.speedX *= -1;
+        }
+        if (lineObj.y1 < 0 || lineObj.y1 > height || lineObj.y2 < 0 || lineObj.y2 > height) {
+          lineObj.speedY *= -1;
+        }
+      }
+
+      // 繪製滑鼠跟隨圖形
+      if (drawShape) {
+        noStroke();
+        fill(shapeColor);
+        ellipse(mouseX, mouseY, 50, 50); // 圓形
+      } else {
+        noFill();
+        stroke(shapeColor);
+        rect(mouseX - 25, mouseY - 25, 50, 50); // 方形
+      }
+    }
+
+    // 當視窗大小改變時，重新調整畫布
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+      
      // p5.js 繪圖功能
     function setup() {
       createCanvas(windowWidth, windowHeight); // 畫布大小自適應
