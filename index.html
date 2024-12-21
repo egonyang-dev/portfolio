@@ -51,278 +51,87 @@
     <button id="change-color">改變顏色</button>
   </div>
   <script>
-    let bgColor1 = 50; // 漸變灰色起點
-    let bgColor2 = 255; // 漸變白色終點
-    let gradientSpeed = 5; // 背景漸變速度
-    let drawShape = true; // 控制圖形
-    let shapeColor = 255; // 初始圖形顏色
-    let lines = []; // 存放隨機線條
+    // 全局變量
+    let lines = [];
+    let drawShape = true;
+    let shapeColor = 255;
+    let gradientSpeed = 5;
+    let bgColor1 = 50, bgColor2 = 255;
 
-    // 初始化畫布
+    // WebGL Shader
+    let theShader;
+
+    function preload() {
+      theShader = loadShader('vertexShader.glsl', 'fragmentShader.glsl'); // 請確保這些文件與 HTML 同一目錄
+    }
+
     function setup() {
-      createCanvas(windowWidth, windowHeight);
-      angleMode(DEGREES);
+      createCanvas(windowWidth, windowHeight, WEBGL);
+      noStroke();
 
-      // 創建一些隨機線條
+      // 初始化隨機線條
       for (let i = 0; i < 10; i++) {
         lines.push({
-          x1: random(width),
-          y1: random(height),
-          x2: random(width),
-          y2: random(height),
-          speedX: random(-2, 2),
-          speedY: random(-2, 2),
+          x1: random(width), y1: random(height),
+          x2: random(width), y2: random(height),
+          speedX: random(-2, 2), speedY: random(-2, 2),
         });
       }
 
       // 綁定按鈕事件
       document.getElementById('toggle-shape').addEventListener('click', () => {
-        drawShape = !drawShape; // 切換圖形
+        drawShape = !drawShape;
       });
 
       document.getElementById('change-color').addEventListener('click', () => {
-        shapeColor = color(random(255), random(255), random(255)); // 隨機改變圖形顏色
+        shapeColor = color(random(255), random(255), random(255));
       });
     }
 
-    // 動態繪圖
     function draw() {
-      // 背景漸變
+      background(0);
+
+      // 背景漸變處理
       for (let y = 0; y < height; y++) {
         let inter = map(y, 0, height, bgColor1, bgColor2);
         stroke(inter);
-        line(0, y, width, y);
+        line(-width / 2, y - height / 2, width / 2, y - height / 2);
       }
-      bgColor1 += gradientSpeed; // 改變灰色
-      bgColor2 -= gradientSpeed; // 改變白色
-      if (bgColor1 > 255 || bgColor2 < 50) gradientSpeed *= -1; // 漸變反轉
+      bgColor1 += gradientSpeed;
+      bgColor2 -= gradientSpeed;
+      if (bgColor1 > 255 || bgColor2 < 50) gradientSpeed *= -1;
 
       // 繪製隨機線條
-      stroke(255, 100); // 半透明白色
-      strokeWeight(1);
       for (let lineObj of lines) {
+        stroke(255, 100);
         line(lineObj.x1, lineObj.y1, lineObj.x2, lineObj.y2);
-
-        // 更新線條位置
         lineObj.x1 += lineObj.speedX;
         lineObj.y1 += lineObj.speedY;
         lineObj.x2 += lineObj.speedX;
         lineObj.y2 += lineObj.speedY;
 
-        // 碰到邊界反彈
-        if (lineObj.x1 < 0 || lineObj.x1 > width || lineObj.x2 < 0 || lineObj.x2 > width) {
-          lineObj.speedX *= -1;
-        }
-        if (lineObj.y1 < 0 || lineObj.y1 > height || lineObj.y2 < 0 || lineObj.y2 > height) {
-          lineObj.speedY *= -1;
-        }
+        if (lineObj.x1 < -width / 2 || lineObj.x1 > width / 2 || lineObj.x2 < -width / 2 || lineObj.x2 > width / 2) lineObj.speedX *= -1;
+        if (lineObj.y1 < -height / 2 || lineObj.y1 > height / 2 || lineObj.y2 < -height / 2 || lineObj.y2 > height / 2) lineObj.speedY *= -1;
       }
 
-      // 繪製滑鼠跟隨圖形
+      // WebGL Shader 處理
+      shader(theShader);
+      theShader.setUniform('time', millis() / 1000.0);
+      sphere(125);
+
+      // 滑鼠交互圖形
       if (drawShape) {
-        noStroke();
         fill(shapeColor);
-        ellipse(mouseX, mouseY, 50, 50); // 圓形
+        ellipse(mouseX - width / 2, mouseY - height / 2, 50, 50);
       } else {
         noFill();
         stroke(shapeColor);
-        rect(mouseX - 25, mouseY - 25, 50, 50); // 方形
+        rect(mouseX - 25 - width / 2, mouseY - 25 - height / 2, 50, 50);
       }
     }
 
-    // 當視窗大小改變時，重新調整畫布
     function windowResized() {
       resizeCanvas(windowWidth, windowHeight);
-      
-     // p5.js 繪圖功能
-    function setup() {
-      createCanvas(windowWidth, windowHeight); // 畫布大小自適應
-      angleMode(DEGREES); // 設定角度單位為度數
-
-      background(220); // 畫布背景顏色
-
-      // 繪製正方形
-      square(20, 20, 100);
-
-      // 繪製矩形
-      rect(100, 40, 200, 100);
-
-      // 繪製眼睛形狀
-      ellipse(540, 100, 300, 100); // 外眼形狀
-      circle(560, 100, 100); // 瞳孔
-      arc(540, 100, 300, 100, 180, 360, CHORD); // 眼皮
-
-      // 繪製線條
-      line(20, 200, 200, 350);
-
-      // 繪製三角形
-      triangle(250, 350, 350, 200, 450, 350);
-
-      // 繪製四邊形
-      quad(500, 250, 550, 200, 700, 300, 650, 350);
-    }
-
-    // 確保畫布尺寸跟隨視窗大小調整
-    function windowResized() {
-      resizeCanvas(windowWidth, windowHeight);
-
-      // vertex shader code as a string
-let vertexShader = `
-precision highp float;
-
-attribute vec3 aPosition;
-attribute vec2 aTexCoord;
-attribute vec4 aVertexColor;
-
-uniform mat4 uModelViewMatrix;
-uniform mat4 uProjectionMatrix;
-
-varying vec2 vTexCoord;
-
-void main() {
-  // Apply the camera transform
-  vec4 viewModelPosition =
-    uModelViewMatrix *
-    vec4(aPosition, 1.0);
-
-  // Tell WebGL where the vertex goes
-  gl_Position =
-    uProjectionMatrix *
-    viewModelPosition;  
-
-  // Pass along data to the fragment shader
-  vTexCoord = aTexCoord;
-}
- `;
-
-// fragment shader code as a string
-let fragmentShader = `
-// casey conchinha - @kcconch ( https://github.com/kcconch )
-// louise lessel - @louiselessel ( https://github.com/louiselessel )
-// more p5.js + shader examples: https://itp-xstory.github.io/p5js-shaders/
-// rotate/tile functions from example by patricio gonzalez vivo
-// @patriciogv ( patriciogonzalezvivo.com )
-
-#ifdef GL_ES
-precision mediump float;
-#endif
-
-#define PI 3.14159265358979323846
-
-uniform vec2 resolution;
-uniform float time;
-uniform vec2 mouse;
-varying vec2 vTexCoord;
-
-vec2 rotate2D (vec2 _st, float _angle) {
-    _st -= 0.5;
-    _st =  mat2(cos(_angle),-sin(_angle),
-                sin(_angle),cos(_angle)) * _st;
-    _st += 0.5;
-    return _st;
-}
-
-vec2 tile (vec2 _st, float _zoom) {
-    _st *= _zoom;
-    return fract(_st);
-}
-
-vec2 rotateTilePattern(vec2 _st){
-    
-    //  Scale the coordinate system by 2x2
-    _st *= 2.0;
-    
-    //  Give each cell an index number
-    //  according to its position
-    float index = 0.0;
-    index += step(1., mod(_st.x,2.0));
-    index += step(1., mod(_st.y,2.0))*2.0;
-    
-    //      |
-    //  2   |   3
-    //      |
-    //--------------
-    //      |
-    //  0   |   1
-    //      |
-    
-    // Make each cell between 0.0 - 1.0
-    _st = fract(_st);
-    
-    // Rotate each cell according to the index
-    if(index == 1.0){
-        //  Rotate cell 1 by 90 degrees
-        _st = rotate2D(_st,PI*0.5);
-    } else if(index == 2.0){
-        //  Rotate cell 2 by -90 degrees
-        _st = rotate2D(_st,PI*-0.5);
-    } else if(index == 3.0){
-        //  Rotate cell 3 by 180 degrees
-        _st = rotate2D(_st,PI);
-    }
-    
-    return _st;
-}
-
-float concentricCircles(in vec2 st, in vec2 radius, in float res, in float scale) {
-    float dist = distance(st,radius);
-    float pct = floor(dist*res)/scale;
-    return pct;
-}
-
-void main (void) {
-    vec2 st = vTexCoord;
-    vec2 mst = gl_FragCoord.xy/mouse.xy;
-    float mdist= distance(vec2(1.0,1.0), mst);
-    
-    float dist = distance(st,vec2(sin(time/10.0),cos(time/10.0)));
-    st = tile(st,10.0);
-    
-    st = rotate2D(st,dist/(mdist/5.0)*PI*2.0);
-    
-    gl_FragColor = vec4(vec3(concentricCircles(st, vec2(0.0,0.0), 5.0, 5.0),concentricCircles(st, vec2(0.0,0.0), 10.0, 10.0),concentricCircles(st, vec2(0.0,0.0), 20.0, 10.0)),1.0);
-}
-`;
-
-// this variable will hold our shader object
-let theShader;
-
-// this variable will hold our createGraphics layer
-let shaderTexture;
-
-function setup() {
-  // shaders require WEBGL mode to work
-  createCanvas(710, 400, WEBGL);
-
-  noStroke();
-  angleMode(DEGREES);
-
-  // create a shader object using the vertex shader and fragment shader strings
-  theShader = createShader(vertexShader, fragmentShader);
-
-  describe('Sphere broken up into a square grid with a gradient in each grid.');
-}
-
-function draw() {
-  background(255);
-
-  // send uniform values to the shader
-  theShader.setUniform('resolution', [width, height]);
-  theShader.setUniform('time', millis() / 1000.0);
-  theShader.setUniform('mouse', [mouseX, map(mouseY, 0, height, height, 0)]);
-
-  shader(theShader);
-  // add a sphere using the texture
-  translate(-150, 0, 0);
-  push();
-  rotateX(-mouseY);
-  rotateY(-mouseX);
-  sphere(125);
-  pop();
-
-  // add an ellipse using the texture
-  // passing a fifth parameter to ellipse for smooth edges in 3D
-  ellipse(260, 0, 200, 200, 100);
     }
   </script>
 </body>
