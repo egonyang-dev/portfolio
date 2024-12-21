@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -18,12 +18,12 @@
     }
 
     canvas {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0; /* 確保畫布在最底層 */
-}
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0; /* 確保畫布在最底層 */
+    }
 
     /* 動態模糊文字效果 */
     .dynamic-text {
@@ -36,18 +36,21 @@
       text-align: center;
       color: white;
       animation: blurAnimation 5.5s infinite;
-     text-shadow: none;
+      text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 20px rgba(255, 255, 255, 0.6),
+        0 0 30px rgba(255, 255, 255, 0.4),
+        0 0 40px rgba(255, 255, 255, 0.2);
       z-index: 1; 
     }
 
     @keyframes blurAnimation {
-      10% {
+      0% {
         text-shadow: 
           0 0 5px rgba(255, 255, 255, 0.8),
           0 0 10px rgba(255, 255, 255, 0.6),
           0 0 20px rgba(255, 255, 255, 0.4),
           0 0 30px rgba(255, 255, 255, 0.2);
-        transform: translate(-50%, -50%);
       }
       50% {
         text-shadow: 
@@ -55,7 +58,7 @@
           0 0 40px rgba(255, 255, 255, 0.6),
           0 0 60px rgba(255, 255, 255, 0.4),
           0 0 80px rgba(255, 255, 255, 0.2);
-        transform: translate(-50%, -50%) scale(0.05); /* 稍微放大效果 */
+        transform: translate(-50%, -50%) scale(1.1); /* 稍微放大效果 */
       }
       100% {
         text-shadow: 
@@ -63,65 +66,32 @@
           0 0 10px rgba(255, 255, 255, 0.6),
           0 0 20px rgba(255, 255, 255, 0.4),
           0 0 30px rgba(255, 255, 255, 0.2);
-        transform: translate(-50%, -50%);
       }
-    }
- </style>
-</head>
-<body>
-  <div class="dynamic-text">Yang Yu Guang Portfolio</div>
-  <script>
-    const dynamicText = document.querySelector('.dynamic-text');
-
-    // 監聽滑鼠移動事件
-    document.addEventListener('mousemove', (e) => {
-      const { clientX, clientY } = e;
-
-      // 設定文字的位置偏移和顏色
-      dynamicText.style.transform = `translate(-50%, -50%) translate(${clientX / 50}px, ${clientY / 50}px)`;
-      dynamicText.style.color = `rgb(${clientX % 255}, ${clientY % 255}, ${(clientX + clientY) % 255})`;
-    });
-    canvas {
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
 </head>
 <body>
   <div class="dynamic-text">Yang Yu Guang Portfolio</div>
-  
   <script>
     let bgColor1 = 50; // 漸變灰色起點
     let bgColor2 = 255; // 漸變白色終點
-    let gradientSpeed = 10; // 背景漸變速度
+    let gradientSpeed = 5; // 背景漸變速度
+    let lines = []; // 隨機線條陣列
 
-function draw() {
-  // 背景漸變效果
-  for (let y = 0; y < height; y++) {
-    let inter = map(y, 0, height, bgColor1, bgColor2);
-    stroke(inter);
-    line(0, y, width, y);
-  }
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      background(0);
 
-  // 不斷漸變，值循環在 0-255 之間
-  bgColor1 = (bgColor1 + gradientSpeed) % 256; // 保持在範圍內
-  bgColor2 = (bgColor2 + gradientSpeed) % 256; // 保持在範圍內
-}
-
-
-      // 初始化隨機線條
+      // 初始化線條
       for (let i = 0; i < 10; i++) {
         lines.push({
           x1: random(width),
           y1: random(height),
           x2: random(width),
           y2: random(height),
-          speedX: random(-9, 9),
-          speedY: random(-9, 9),
+          speedX: random(-2, 2),
+          speedY: random(-2, 2),
         });
       }
     }
@@ -133,12 +103,13 @@ function draw() {
         stroke(inter);
         line(0, y, width, y);
       }
-      bgColor1 += gradientSpeed;
-      bgColor2 -= gradientSpeed;
-      if (bgColor1 > 255 || bgColor2 < 50) gradientSpeed *= -1;
 
-      // 隨機移動的線條
-      stroke(255, 100);
+      // 不斷更新背景漸變
+      bgColor1 = (bgColor1 + gradientSpeed) % 256;
+      bgColor2 = (bgColor2 + gradientSpeed) % 256;
+
+      // 隨機線條效果
+      stroke(255, 100); // 白色線條，帶透明度
       strokeWeight(1);
       for (let lineObj of lines) {
         line(lineObj.x1, lineObj.y1, lineObj.x2, lineObj.y2);
@@ -148,9 +119,6 @@ function draw() {
         lineObj.y1 += lineObj.speedY;
         lineObj.x2 += lineObj.speedX;
         lineObj.y2 += lineObj.speedY;
-        
-function draw() {
-  background(0, 30); // 半透明背景，創造拖影效果
 
         // 碰到邊界反彈
         if (lineObj.x1 < 0 || lineObj.x1 > width || lineObj.x2 < 0 || lineObj.x2 > width) {
@@ -163,8 +131,18 @@ function draw() {
     }
 
     function windowResized() {
-      resizeCanvas(windowWidth, windowHeight); // 畫布自適應視窗大小
+      resizeCanvas(windowWidth, windowHeight); // 畫布隨視窗大小調整
     }
+
+    // 游標互動：讓文字跟隨滑鼠
+    const dynamicText = document.querySelector('.dynamic-text');
+    document.addEventListener('mousemove', (e) => {
+      const { clientX, clientY } = e;
+
+      // 設定文字偏移與顏色動態變化
+      dynamicText.style.transform = `translate(-50%, -50%) translate(${clientX / 50}px, ${clientY / 50}px)`;
+      dynamicText.style.color = `rgb(${clientX % 255}, ${clientY % 255}, ${(clientX + clientY) % 255})`;
+    });
   </script>
 </body>
 </html>
