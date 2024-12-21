@@ -9,6 +9,7 @@
       margin: 0;
       height: 100vh;
       display: flex;
+      flex-direction: column; /* 垂直排列多個畫布 */
       justify-content: center;
       align-items: center;
       background: #000;
@@ -207,6 +208,38 @@ document.addEventListener('mousemove', (e) => {
     function windowResized() {
       resizeCanvas(windowWidth, windowHeight);
     }
+   <script>
+    // Function for first canvas
+    function sketch1(p) {
+      p.setup = function () {
+        p.createCanvas(720, 200);
+        p.background(0); // 黑色背景
+      };
+      p.draw = function () {
+        p.fill(255); // 白色填充
+        p.noStroke();
+        p.circle(p.mouseX, p.mouseY, 50);
+      };
+    }
+
+    // Run first p5 instance
+    new p5(sketch1);
+
+    // Function for second canvas
+    function sketch2(p) {
+      p.setup = function () {
+        p.createCanvas(720, 200);
+        p.background(255); // 白色背景
+        p.fill(0); // 黑色填充
+        p.stroke(255); // 白色邊框
+      };
+      p.draw = function () {
+        p.square(p.mouseX, p.mouseY, 50);
+      };
+    }
+
+    // Run second p5 instance
+    new p5(sketch2);
 });
   </script>
 </body>
