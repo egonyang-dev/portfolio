@@ -12,21 +12,16 @@
       flex-direction: column; /* 垂直排列多個畫布 */
       justify-content: center;
       align-items: center;
-      background: #000;
+      background: #000; /* 純黑背景 */
       font-family: Arial, sans-serif;
       overflow: hidden;
-      color: white;
     }
 
     canvas {
       display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0; /* 確保畫布在最底層 */
+      margin: 10px;
     }
 
-    /* 動態模糊文字效果 */
     .dynamic-text {
       position: absolute;
       top: 50%;
@@ -42,7 +37,6 @@
         0 0 20px rgba(255, 255, 255, 0.6),
         0 0 30px rgba(255, 255, 255, 0.4),
         0 0 40px rgba(255, 255, 255, 0.2);
-      z-index: 1; 
     }
 
     @keyframes blurAnimation {
@@ -59,7 +53,7 @@
           0 0 40px rgba(255, 255, 255, 0.6),
           0 0 60px rgba(255, 255, 255, 0.4),
           0 0 80px rgba(255, 255, 255, 0.2);
-        transform: translate(-50%, -50%) scale(1.0); /* 稍微放大效果 */
+        transform: translate(-50%, -50%) scale(1.0);
       }
       100% {
         text-shadow: 
@@ -74,67 +68,38 @@
 </head>
 <body>
   <div class="dynamic-text">Yang Yu Guang Portfolio</div>
+
   <script>
-    let bgColor1 = 50; // 漸變灰色起點
-    let bgColor2 = 255; // 漸變白色終點
-    let gradientSpeed = 1; // 背景漸變速度
-    let lines = []; // 隨機線條陣列
-
-    function setup() {
-      createCanvas(windowWidth, windowHeight);
-      background(0);
-
-      // 初始化線條
-      for (let i = 0; i < 10; i++) {
-        lines.push({
-          x1: random(width),
-          y1: random(height),
-          x2: random(width),
-          y2: random(height),
-          speedX: random(-2, 2),
-          speedY: random(-2, 2),
-        });
-      }
+    // 第一個 p5.js 畫布
+    function sketch1(p) {
+      p.setup = function () {
+        p.createCanvas(720, 200);
+        p.background(0); // 黑色背景
+      };
+      p.draw = function () {
+        p.fill(255); // 白色填充
+        p.noStroke();
+        p.circle(p.mouseX, p.mouseY, 50); // 滑鼠移動時繪製圓形
+      };
     }
+    new p5(sketch1); // 創建第一個 p5 實例
 
-      // 隨機線條效果
-      stroke(255, 100); // 白色線條，帶透明度
-      strokeWeight(1);
-      for (let lineObj of lines) {
-        line(lineObj.x1, lineObj.y1, lineObj.x2, lineObj.y2);
-
-        // 更新線條位置
-        lineObj.x1 += lineObj.speedX;
-        lineObj.y1 += lineObj.speedY;
-        lineObj.x2 += lineObj.speedX;
-        lineObj.y2 += lineObj.speedY;
-
-        // 碰到邊界反彈
-        if (lineObj.x1 < 0 || lineObj.x1 > width || lineObj.x2 < 0 || lineObj.x2 > width) {
-          lineObj.speedX *= -1;
-        }
-        if (lineObj.y1 < 0 || lineObj.y1 > height || lineObj.y2 < 0 || lineObj.y2 > height) {
-          lineObj.speedY *= -1;
-        }
-      }
+    // 第二個 p5.js 畫布
+    function sketch2(p) {
+      p.setup = function () {
+        p.createCanvas(720, 200);
+        p.background(255); // 白色背景
+        p.fill(0); // 黑色填充
+        p.stroke(255); // 白色邊框
+      };
+      p.draw = function () {
+        p.square(p.mouseX, p.mouseY, 50); // 滑鼠移動時繪製正方形
+      };
     }
+    new p5(sketch2); // 創建第二個 p5 實例
 
-    function windowResized() {
-      resizeCanvas(windowWidth, windowHeight); // 畫布隨視窗大小調整
-    }
-
-    // 游標互動：讓文字跟隨滑鼠
-   const dynamicText = document.querySelector('.dynamic-text');
-document.addEventListener('mousemove', (e) => {
-  const { clientX, clientY } = e;
-
-  // 計算灰階顏色值，範圍在 0 (黑) 到 255 (白)
-  const grayValue = Math.floor(((clientX + clientY) / (window.innerWidth + window.innerHeight)) * 255);
-
-  // 設定文字偏移與灰階顏色
-  dynamicText.style.transform = `translate(-50%, -50%) translate(${clientX / 50}px, ${clientY / 50}px)`;
-  dynamicText.style.color = `rgb(${grayValue}, ${grayValue}, ${grayValue})`; // 灰階顏色
-  let vertexShader = `
+    // WebGL 畫布與 Shader
+    let vertexShader = `
       precision highp float;
 
       attribute vec3 aPosition;
@@ -155,8 +120,6 @@ document.addEventListener('mousemove', (e) => {
     let fragmentShader = `
       precision mediump float;
 
-      #define PI 3.14159265358979323846
-
       uniform vec2 resolution;
       uniform float time;
       uniform vec2 mouse;
@@ -170,94 +133,25 @@ document.addEventListener('mousemove', (e) => {
       }
     `;
 
-    let theShader;
+    function sketch3(p) {
+      let theShader;
 
-    function setup() {
-      createCanvas(windowWidth, windowHeight, WEBGL);
-
-      noStroke();
-      theShader = createShader(vertexShader, fragmentShader);
-    }
-
-    function draw() {
-      background(0);
-
-      theShader.setUniform('resolution', [width, height]);
-      theShader.setUniform('time', millis() / 1000.0);
-      theShader.setUniform('mouse', [mouseX, mouseY]);
-
-      shader(theShader);
-      rect(-width / 2, -height / 2, width, height);
-    }
-
-    function windowResized() {
-      resizeCanvas(windowWidth, windowHeight);
-    }
-   <script>
-    // Function for first canvas
-    function sketch1(p) {
       p.setup = function () {
-        p.createCanvas(720, 200);
-        p.background(0); // 黑色背景
-      };
-      p.draw = function () {
-        p.fill(255); // 白色填充
+        p.createCanvas(720, 200, p.WEBGL);
+        theShader = p.createShader(vertexShader, fragmentShader);
         p.noStroke();
-        p.circle(p.mouseX, p.mouseY, 50);
       };
-    }
 
-    // Run first p5 instance
-    new p5(sketch1);
-
-    // Function for second canvas
-    function sketch2(p) {
-      p.setup = function () {
-        p.createCanvas(720, 200);
-        p.background(255); // 白色背景
-        p.fill(0); // 黑色填充
-        p.stroke(255); // 白色邊框
-      };
       p.draw = function () {
-        p.square(p.mouseX, p.mouseY, 50);
+        p.background(0);
+        theShader.setUniform('resolution', [p.width, p.height]);
+        theShader.setUniform('time', p.millis() / 1000.0);
+        theShader.setUniform('mouse', [p.mouseX, p.mouseY]);
+        p.shader(theShader);
+        p.rect(-p.width / 2, -p.height / 2, p.width, p.height);
       };
     }
-
-    // Run second p5 instance
-    new p5(sketch2);
-    <script>
-    // Function for first canvas
-    function sketch1(p) {
-      p.setup = function () {
-        p.createCanvas(720, 200);
-        p.background(0); // 黑色背景
-      };
-      p.draw = function () {
-        p.fill(255); // 白色填充
-        p.noStroke();
-        p.circle(p.mouseX, p.mouseY, 50);
-      };
-    }
-
-    // Run first p5 instance
-    new p5(sketch1);
-
-    // Function for second canvas
-    function sketch2(p) {
-      p.setup = function () {
-        p.createCanvas(720, 200);
-        p.background(0); // 黑色背景
-        p.fill(255); // 白色填充
-        p.stroke(255); // 白色邊框
-      };
-      p.draw = function () {
-        p.square(p.mouseX, p.mouseY, 50);
-      };
-    }
-
-    // Run second p5 instance
-    new p5(sketch2);
-});
+    new p5(sketch3); // 創建第三個 p5 實例
   </script>
 </body>
 </html>
