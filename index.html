@@ -30,7 +30,7 @@
       height: 200px; /* 與畫布高度一致 */
       margin: 10px 0; /* 與其他容器保持間距 */
     }
-
+    
     .dynamic-text {
       position: absolute; /* 讓文字固定在第二個畫布上方 */
       top: 50%; /* 垂直居中 */
@@ -48,7 +48,17 @@
         0 0 30px rgba(255, 255, 255, 0.4),
         0 0 40px rgba(255, 255, 255, 0.2);
     }
-
+    
+    @media (max-width: 768px) {
+      .dynamic-text {
+        font-size: 1.5rem; /* 調整字體大小 */
+        left: 50%; /* 保持居中 */
+        transform: translate(-50%, -50%);
+        width: 90%; /* 限制文字寬度，避免超出螢幕 */
+        word-wrap: break-word; /* 避免超出邊界 */
+      }
+    }
+    
     @keyframes blurAnimation {
       10% {
         text-shadow: 
