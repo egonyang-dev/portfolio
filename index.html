@@ -20,11 +20,16 @@
     canvas {
       display: block;
       margin: 10px;
+       z-index: 0; /* 確保畫布在文字後面 */
+      position: relative;
     }
+    
 #sketch-container {
-  margin-top: -100px; /* 向上移動 100px */
+  margin-top: -500px; /* 向上移動 100px */
 }
     .dynamic-text {
+      position: relative; /* 必須有 position 才能使用 z-index */
+      z-index: 10; /* 設定比畫布高的 z-index */
       margin: 50px auto; /* 讓文字區塊有一些上下邊距，並置中 */
       text-align: center; /* 讓文字本身在區塊內水平居中 */
       font-size: 2rem;
