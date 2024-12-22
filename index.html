@@ -38,7 +38,7 @@
     }
 
     @keyframes blurAnimation {
-      10% {
+      0% {
         text-shadow: 
           0 0 5px rgba(255, 255, 255, 0.8),
           0 0 10px rgba(255, 255, 255, 0.6),
@@ -66,7 +66,9 @@
 </head>
 <body>
   <div class="dynamic-text">Yang Yu Guang Portfolio</div>
-
+ 
+  <!-- 第一個畫布容器 -->
+  <div class="canvas-container">
   <script>
     // 第一個 p5.js 畫布
     function sketch1(p) {
@@ -81,7 +83,11 @@
       };
     }
     new p5(sketch1); // 創建第一個 p5 實例
+  </script>
+  </div>
 
+  <!-- 第二個畫布容器 -->
+  <div class="canvas-container">
     // 第二個 p5.js 畫布
     function sketch2(p) {
       p.setup = function () {
@@ -95,7 +101,12 @@
       };
     }
     new p5(sketch2); // 創建第二個 p5 實例
+ </script>
+  </div>
 
+  <!-- 第三個畫布容器 -->
+  <div class="canvas-container">
+     <script>
     // WebGL 畫布與 Shader
     let vertexShader = `
       precision highp float;
