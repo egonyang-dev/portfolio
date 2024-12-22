@@ -7,7 +7,7 @@
   <style>
     body {
       margin: 0;
-      height: 2500px;  
+      height: 1500px;  
       display: flex;
       flex-direction: column; /* 垂直排列多個畫布 */
       justify-content: center;
@@ -16,19 +16,14 @@
       font-family: Arial, sans-serif;
       overflow: auto;
     }
-    
-.canvas-container {
-      position: relative; /* 父容器設置為相對定位，讓子元素絕對定位基於此容器 */
-      margin: 20px auto; /* 中央對齊容器 */
-      width: 80%; /* 限制容器寬度 */
+
     canvas {
-      position: absolute; /* 使用絕對定位 */
-  top: 100px; /* 距離頂部 100px */
-  left: 50px; /* 距離左側 50px */
-}
+      display: block;
+      margin: 10px;
+    }
 
     .dynamic-text {
-      margin: 20px auto; /* 讓文字區塊有一些上下邊距，並置中 */
+      margin: 50px auto; /* 讓文字區塊有一些上下邊距，並置中 */
       text-align: center; /* 讓文字本身在區塊內水平居中 */
       font-size: 2rem;
       text-transform: uppercase;
@@ -43,7 +38,7 @@
     }
 
     @keyframes blurAnimation {
-      0% {
+      10% {
         text-shadow: 
           0 0 5px rgba(255, 255, 255, 0.8),
           0 0 10px rgba(255, 255, 255, 0.6),
@@ -56,6 +51,7 @@
           0 0 40px rgba(255, 255, 255, 0.6),
           0 0 60px rgba(255, 255, 255, 0.4),
           0 0 80px rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%) scale(1.0);
       }
       100% {
         text-shadow: 
@@ -70,24 +66,12 @@
 </head>
 <body>
   <div class="dynamic-text">Yang Yu Guang Portfolio</div>
- 
-  <!-- 第一個畫布容器 -->
-  <div class="canvas-container">
-     <!-- 第一個畫布 -->
-  <div id="canvas1"></div>
 
-  <!-- 第二個畫布 -->
-  <div id="canvas2"></div>
-
-  <!-- 第三個畫布 -->
-  <div id="canvas3"></div>
-</div>  
-  
   <script>
     // 第一個 p5.js 畫布
     function sketch1(p) {
       p.setup = function () {
-        p.createCanvas(720, 200).parent("canvas1"); // 附加到 canvas1
+        p.createCanvas(720, 200);
         p.background(0); // 黑色背景
       };
       p.draw = function () {
@@ -97,13 +81,11 @@
       };
     }
     new p5(sketch1); // 創建第一個 p5 實例
-  
 
-  <!-- 第二個畫布容器 -->
     // 第二個 p5.js 畫布
     function sketch2(p) {
       p.setup = function () {
-        p.createCanvas(720, 200).parent("canvas2"); // 附加到 canvas2
+        p.createCanvas(720, 200);
         p.background(255); // 白色背景
         p.fill(0); // 黑色填充
         p.stroke(255); // 白色邊框
@@ -115,7 +97,7 @@
     new p5(sketch2); // 創建第二個 p5 實例
 
     // WebGL 畫布與 Shader
-    let vertexShader = `
+    let vertexShader = 
       precision highp float;
 
       attribute vec3 aPosition;
@@ -131,9 +113,9 @@
         gl_Position = uProjectionMatrix * viewModelPosition;  
         vTexCoord = aTexCoord;
       }
-    `;
+    ;
 
-    let fragmentShader = `
+    let fragmentShader = 
       precision mediump float;
 
       uniform vec2 resolution;
@@ -147,13 +129,13 @@
         st = fract(st * 10.0);
         gl_FragColor = vec4(vec3(dist), 1.0);
       }
-    `;
+    ;
 
     function sketch3(p) {
       let theShader;
 
       p.setup = function () {
-        p.createCanvas(720, 200, p.WEBGL).parent("canvas3"); // 附加到 canvas3
+        p.createCanvas(720, 200, p.WEBGL);
         theShader = p.createShader(vertexShader, fragmentShader);
         p.noStroke();
       };
@@ -171,3 +153,5 @@
   </script>
 </body>
 </html>
+
+
