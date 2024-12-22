@@ -35,7 +35,7 @@
     
     .dynamic-text {
      position: absolute; /* 讓文字固定在頁面最上方 */
-      top: 100px; /* 距離頁面頂部 20px */
+      top: 320px; /* 距離頁面頂部 20px */
       left: 50%; /* 水平居中 */
       transform: translateX(-50%); /* 修正水平居中的位置 */
       z-index: 10; /* 設定比畫布高的 z-index */
@@ -80,14 +80,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
 </head>
 <body>
-  <div class="dynamic-text">Yang Yu Guang Portfolio</div>
-  <div id="sketch-container"></div>
-
-  <script>
+   <div id="sketch-container">
+    <!-- 第一個畫布 -->
+    <div id="first-canvas"></div>
+    <!-- 第二個畫布 -->
+    <div id="second-canvas">
+      <div class="dynamic-text">Yang Yu Guang Portfolio</div>
+    </div>
+  </div>
+  
+ <script>
     // 第一個 p5.js 畫布
     function sketch1(p) {
       p.setup = function () {
-        p.createCanvas(720, 200).parent('sketch-container'); // 指定畫布容器
+        p.createCanvas(720, 200).parent('first-canvas'); // 指定畫布容器
         p.background(0); // 黑色背景
       };
       p.draw = function () {
@@ -101,7 +107,7 @@
     // 第二個 p5.js 畫布
     function sketch2(p) {
       p.setup = function () {
-        p.createCanvas(720, 200).parent('sketch-container'); // 指定畫布容器
+        p.createCanvas(720, 200).parent('second-canvas'); // 指定畫布容器
         p.background(255); // 白色背景
         p.fill(0); // 黑色填充
         p.stroke(255); // 白色邊框
@@ -111,61 +117,6 @@
       };
     }
     new p5(sketch2);
-
-    // WebGL 畫布與 Shader
-    let vertexShader = `
-      precision highp float;
-
-      attribute vec3 aPosition;
-      attribute vec2 aTexCoord;
-
-      uniform mat4 uModelViewMatrix;
-      uniform mat4 uProjectionMatrix;
-
-      varying vec2 vTexCoord;
-
-      void main() {
-        vec4 viewModelPosition = uModelViewMatrix * vec4(aPosition, 1.0);
-        gl_Position = uProjectionMatrix * viewModelPosition;  
-        vTexCoord = aTexCoord;
-      }
-    `;
-
-    let fragmentShader = `
-      precision mediump float;
-
-      uniform vec2 resolution;
-      uniform float time;
-      uniform vec2 mouse;
-      varying vec2 vTexCoord;
-
-      void main (void) {
-        vec2 st = vTexCoord;
-        float dist = distance(st, vec2(sin(time), cos(time)));
-        st = fract(st * 10.0);
-        gl_FragColor = vec4(vec3(dist), 1.0);
-      }
-    `;
-
-    function sketch3(p) {
-      let theShader;
-
-      p.setup = function () {
-        p.createCanvas(720, 200, p.WEBGL).parent('sketch-container');
-        theShader = p.createShader(vertexShader, fragmentShader);
-        p.noStroke();
-      };
-
-      p.draw = function () {
-        p.background(0);
-        theShader.setUniform('resolution', [p.width, p.height]);
-        theShader.setUniform('time', p.millis() / 1000.0);
-        theShader.setUniform('mouse', [p.mouseX, p.mouseY]);
-        p.shader(theShader);
-        p.rect(-p.width / 2, -p.height / 2, p.width, p.height);
-      };
-    }
-    new p5(sketch3);
   </script>
 </body>
 </html>
