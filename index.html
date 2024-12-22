@@ -12,7 +12,7 @@
       flex-direction: column; /* 垂直排列多個畫布 */
       justify-content: center;
       align-items: center;
-      background: #000;; /* 純黑背景 */
+      background: #000; /* 純黑背景 */
       font-family: Arial, sans-serif;
       overflow: auto;
     }
@@ -51,7 +51,6 @@
           0 0 40px rgba(255, 255, 255, 0.6),
           0 0 60px rgba(255, 255, 255, 0.4),
           0 0 80px rgba(255, 255, 255, 0.2);
-        transform: translate(-50%, -50%) scale(1.0);
       }
       100% {
         text-shadow: 
@@ -66,12 +65,13 @@
 </head>
 <body>
   <div class="dynamic-text">Yang Yu Guang Portfolio</div>
+  <div id="sketch-container"></div>
 
   <script>
     // 第一個 p5.js 畫布
     function sketch1(p) {
       p.setup = function () {
-        p.createCanvas(720, 200);
+        p.createCanvas(720, 200).parent('sketch-container'); // 指定畫布容器
         p.background(0); // 黑色背景
       };
       p.draw = function () {
@@ -80,12 +80,12 @@
         p.circle(p.mouseX, p.mouseY, 50); // 滑鼠移動時繪製圓形
       };
     }
-    new p5(sketch1); // 創建第一個 p5 實例
+    new p5(sketch1);
 
     // 第二個 p5.js 畫布
     function sketch2(p) {
       p.setup = function () {
-        p.createCanvas(720, 200);
+        p.createCanvas(720, 200).parent('sketch-container'); // 指定畫布容器
         p.background(255); // 白色背景
         p.fill(0); // 黑色填充
         p.stroke(255); // 白色邊框
@@ -94,10 +94,10 @@
         p.square(p.mouseX, p.mouseY, 50); // 滑鼠移動時繪製正方形
       };
     }
-    new p5(sketch2); // 創建第二個 p5 實例
+    new p5(sketch2);
 
     // WebGL 畫布與 Shader
-    let vertexShader = 
+    let vertexShader = `
       precision highp float;
 
       attribute vec3 aPosition;
@@ -113,9 +113,9 @@
         gl_Position = uProjectionMatrix * viewModelPosition;  
         vTexCoord = aTexCoord;
       }
-    ;
+    `;
 
-    let fragmentShader = 
+    let fragmentShader = `
       precision mediump float;
 
       uniform vec2 resolution;
@@ -129,13 +129,13 @@
         st = fract(st * 10.0);
         gl_FragColor = vec4(vec3(dist), 1.0);
       }
-    ;
+    `;
 
     function sketch3(p) {
       let theShader;
 
       p.setup = function () {
-        p.createCanvas(720, 200, p.WEBGL);
+        p.createCanvas(720, 200, p.WEBGL).parent('sketch-container');
         theShader = p.createShader(vertexShader, fragmentShader);
         p.noStroke();
       };
@@ -149,9 +149,7 @@
         p.rect(-p.width / 2, -p.height / 2, p.width, p.height);
       };
     }
-    new p5(sketch3); // 創建第三個 p5 實例
+    new p5(sketch3);
   </script>
 </body>
 </html>
-
-
