@@ -16,7 +16,11 @@
       font-family: Arial, sans-serif;
       overflow: auto;
     }
-
+    
+.canvas-container {
+      position: relative; /* 父容器設置為相對定位，讓子元素絕對定位基於此容器 */
+      margin: 20px auto; /* 中央對齊容器 */
+      width: 80%; /* 限制容器寬度 */
     canvas {
       position: absolute; /* 使用絕對定位 */
   top: 100px; /* 距離頂部 100px */
@@ -77,7 +81,8 @@
 
   <!-- 第三個畫布 -->
   <div id="canvas3"></div>
-    
+</div>  
+  
   <script>
     // 第一個 p5.js 畫布
     function sketch1(p) {
