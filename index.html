@@ -7,34 +7,37 @@
   <style>
     body {
       margin: 0;
-      height: 100vh;
+      height: 1500px;  
       display: flex;
-      flex-direction: column;
-      justify-content: center; /* 垂直居中 */
+      flex-direction: column; /* 垂直排列多個畫布 */
+      justify-content: flex-start; /* 頂部開始排列 */
       align-items: center; /* 水平居中 */
       background: #000; /* 純黑背景 */
       font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
-
-    .sketch-container {
-      position: relative;
-      width: 720px; /* 畫布寬度 */
-      height: 200px; /* 畫布高度 */
-      margin: 20px 0; /* 上下間距 */
+      overflow: auto;
     }
 
     canvas {
-      display: block;
+      display: block; /* 確保每個 canvas 獨占一行 */
+      margin: 10px auto; /* 自動水平對齊 */
+      z-index: 0; /* 確保畫布在文字後面 */
       position: relative;
+    }
+    
+    .sketch-container {
+      position: relative; /* 父容器用來定位文字 */
+      width: 720px; /* 畫布寬度 */
+      height: 200px; /* 與畫布高度一致 */
+      margin: 10px 0; /* 與其他容器保持間距 */
     }
 
     .dynamic-text {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
+      position: absolute; /* 讓文字固定在第二個畫布上方 */
+      top: 50%; /* 垂直居中 */
+      left: 50%; /* 水平居中 */
+      transform: translate(-50%, -50%); /* 修正偏移，使文字完全居中 */
+      z-index: 10; /* 設定比畫布高的 z-index */
+      text-align: center; /* 讓文字本身水平居中 */
       font-size: 1rem;
       text-transform: uppercase;
       color: white;
