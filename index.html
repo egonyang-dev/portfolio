@@ -2,24 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Yang Yu Guang Portfolio</title>
   <style>
     body {
       margin: 0;
-      height: 1500px;  
+      padding: 0;
+      height: 2500px;  
       display: flex;
       flex-direction: column; /* 垂直排列多個畫布 */
       justify-content: flex-start; /* 頂部開始排列 */
       align-items: center; /* 水平居中 */
       background: #000; /* 純黑背景 */
       font-family: Arial, sans-serif;
-      overflow: auto;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     canvas {
       display: block; /* 確保每個 canvas 獨占一行 */
       width: 100%;
+      height: 100%; /* 高度自動調整 */
       margin: 10px auto; /* 自動水平對齊 */
       z-index: 0; /* 確保畫布在文字後面 */
       position: relative;
@@ -29,7 +32,7 @@
       position: relative; /* 父容器用來定位文字 */
       width: 720px; /* 畫布寬度 */
       height: 200px; /* 與畫布高度一致 */
-      margin: 10px 0; /* 與其他容器保持間距 */
+      margin: 10px 100%;; /* 與其他容器保持間距 */
     }
     
     .dynamic-text {
