@@ -18,27 +18,23 @@
     }
 
     .sketch-container {
-      position: absolute; /* 絕對定位 */
-      top: 50%; /* 頂部 50% */
-      left: 50%; /* 左側 50% */
-      transform: translate(-50%, -50%); /* 水平和垂直居中 */
+      position: relative;
       width: 720px; /* 畫布寬度 */
       height: 200px; /* 畫布高度 */
+      margin: 20px 0; /* 上下間距 */
     }
 
     canvas {
-      display: block; /* 確保每個 canvas 獨占一行 */
-      margin: 10px auto; /* 自動水平對齊 */
+      display: block;
       position: relative;
     }
 
     .dynamic-text {
-      position: absolute; /* 讓文字固定在第二個畫布上方 */
-      top: 0; /* 畫布內部頂部 */
-      left: 50%; /* 水平居中 */
-      transform: translateX(-50%); /* 修正水平居中的位置 */
-      z-index: 10; /* 設定比畫布高的 z-index */
-      text-align: center;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
       font-size: 1rem;
       text-transform: uppercase;
       color: white;
