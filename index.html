@@ -19,16 +19,20 @@
 
     canvas {
       display: block;
-      margin: 10px;
-       z-index: 0; /* 確保畫布在文字後面 */
+      margin: 0 auto;
+      z-index: 0; /* 確保畫布在文字後面 */
       position: relative;
     }
     
 #sketch-container {
   margin-top: -800px; /* 向上移動 100px */
+  display: flex; /* 使用 Flexbox 讓子元素水平居中 */
+  justify-content: center; /* 子元素水平置中 */
+  align-items: center; /* 子元素垂直置中 */
+  width: 100%; /* 確保容器的寬度覆蓋全頁面 */
 }
     .dynamic-text {
-      margin-top: 2000px; /* 讓文字向下移動 100px */
+      margin-top: 500px; /* 讓文字向下移動 100px */
       position: relative; /* 必須有 position 才能使用 z-index */
       z-index: 10; /* 設定比畫布高的 z-index */
       margin: 50px auto; /* 讓文字區塊有一些上下邊距，並置中 */
