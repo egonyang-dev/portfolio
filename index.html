@@ -50,8 +50,13 @@
     }
     
     @media (max-width: 768px) {
+      canvas {
+        width: 90%; /* 畫布寬度為 90% */
+        height: auto; /* 高度自動調整 */
+      }
+      
       .dynamic-text {
-        font-size: 1.5rem; /* 調整字體大小 */
+        font-size: 2rem; /* 調整字體大小 */
         left: 50%; /* 保持居中 */
         transform: translate(-50%, -50%);
         width: 90%; /* 限制文字寬度，避免超出螢幕 */
