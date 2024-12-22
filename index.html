@@ -12,7 +12,7 @@
       flex-direction: column; /* 垂直排列多個畫布 */
       justify-content: center;
       align-items: center;
-      background: linear-gradient(black, grey); /* 純黑背景 */
+      background: #000;; /* 純黑背景 */
       font-family: Arial, sans-serif;
       overflow: auto;
     }
@@ -25,12 +25,11 @@
     .dynamic-text {
       margin: 50px auto; /* 讓文字區塊有一些上下邊距，並置中 */
       text-align: center; /* 讓文字本身在區塊內水平居中 */
-      transform: translate(-50%, -50%);
       font-size: 2rem;
       text-transform: uppercase;
       text-align: center;
       color: white;
-      animation: blurAnimation 9.5s infinite;
+      animation: blurAnimation 4.5s infinite;
       text-shadow: 
         0 0 10px rgba(255, 255, 255, 0.8),
         0 0 20px rgba(255, 255, 255, 0.6),
@@ -39,7 +38,7 @@
     }
 
     @keyframes blurAnimation {
-      0% {
+      10% {
         text-shadow: 
           0 0 5px rgba(255, 255, 255, 0.8),
           0 0 10px rgba(255, 255, 255, 0.6),
