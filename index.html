@@ -10,40 +10,36 @@
       height: 1500px;  
       display: flex;
       flex-direction: column; /* 垂直排列多個畫布 */
-      justify-content: center;
-      align-items: center;
+      justify-content: flex-start; /* 頂部開始排列 */
+      align-items: center; /* 水平居中 */
       background: #000; /* 純黑背景 */
       font-family: Arial, sans-serif;
       overflow: auto;
     }
 
     canvas {
-      display: block;
-      margin: 10px auto;
+      display: block; /* 確保每個 canvas 獨占一行 */
+      margin: 10px auto; /* 自動水平對齊 */
       z-index: 0; /* 確保畫布在文字後面 */
       position: relative;
     }
     
-#sketch-container {
-   margin-top: 0; /* 確保容器在正確位置 */
-      display: flex; /* 使用 Flexbox 排列子元素 */
-      flex-direction: column; /* 改為垂直排列 */
-      justify-content: center; /* 垂直方向居中 */
-      align-items: center; /* 水平方向居中 */
-      width: 100%; /* 確保容器的寬度覆蓋全頁面 */
+    .sketch-container {
+      position: relative; /* 父容器用來定位文字 */
+      width: 720px; /* 畫布寬度 */
+      height: 200px; /* 與畫布高度一致 */
+      margin: 10px 0; /* 與其他容器保持間距 */
     }
-    
+
     .dynamic-text {
-     position: absolute; /* 讓文字固定在頁面最上方 */
-      top: 320px; /* 距離頁面頂部 20px */
+      position: absolute; /* 讓文字固定在第二個畫布上方 */
+      top: 50%; /* 垂直居中 */
       left: 50%; /* 水平居中 */
-      transform: translateX(-50%); /* 修正水平居中的位置 */
+      transform: translate(-50%, -50%); /* 修正偏移，使文字完全居中 */
       z-index: 10; /* 設定比畫布高的 z-index */
-      margin: 50px auto; /* 讓文字區塊有一些上下邊距，並置中 */
-      text-align: center; /* 讓文字本身在區塊內水平居中 */
+      text-align: center; /* 讓文字本身水平居中 */
       font-size: 1rem;
       text-transform: uppercase;
-      text-align: center;
       color: white;
       animation: blurAnimation 4.5s infinite;
       text-shadow: 
@@ -80,20 +76,22 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
 </head>
 <body>
-   <div id="sketch-container">
-    <!-- 第一個畫布 -->
-    <div id="first-canvas"></div>
-    <!-- 第二個畫布 -->
-    <div id="second-canvas">
-      <div class="dynamic-text">Yang Yu Guang Portfolio</div>
-    </div>
+  <!-- 第一個畫布 -->
+  <div class="sketch-container" id="sketch-container-1"></div>
+  
+  <!-- 第二個畫布，包含文字 -->
+  <div class="sketch-container" id="sketch-container-2">
+    <div class="dynamic-text">Yang Yu Guang Portfolio</div>
   </div>
   
- <script>
+  <!-- 第三個畫布 -->
+  <div class="sketch-container" id="sketch-container-3"></div>
+
+  <script>
     // 第一個 p5.js 畫布
     function sketch1(p) {
       p.setup = function () {
-        p.createCanvas(720, 200).parent('first-canvas'); // 指定畫布容器
+        p.createCanvas(720, 200).parent('sketch-container-1'); // 指定第一個畫布容器
         p.background(0); // 黑色背景
       };
       p.draw = function () {
@@ -107,7 +105,7 @@
     // 第二個 p5.js 畫布
     function sketch2(p) {
       p.setup = function () {
-        p.createCanvas(720, 200).parent('second-canvas'); // 指定畫布容器
+        p.createCanvas(720, 200).parent('sketch-container-2'); // 指定第二個畫布容器
         p.background(255); // 白色背景
         p.fill(0); // 黑色填充
         p.stroke(255); // 白色邊框
@@ -117,6 +115,61 @@
       };
     }
     new p5(sketch2);
+
+    // 第三個 p5.js 畫布與 Shader
+    let vertexShader = `
+      precision highp float;
+
+      attribute vec3 aPosition;
+      attribute vec2 aTexCoord;
+
+      uniform mat4 uModelViewMatrix;
+      uniform mat4 uProjectionMatrix;
+
+      varying vec2 vTexCoord;
+
+      void main() {
+        vec4 viewModelPosition = uModelViewMatrix * vec4(aPosition, 1.0);
+        gl_Position = uProjectionMatrix * viewModelPosition;  
+        vTexCoord = aTexCoord;
+      }
+    `;
+
+    let fragmentShader = `
+      precision mediump float;
+
+      uniform vec2 resolution;
+      uniform float time;
+      uniform vec2 mouse;
+      varying vec2 vTexCoord;
+
+      void main (void) {
+        vec2 st = vTexCoord;
+        float dist = distance(st, vec2(sin(time), cos(time)));
+        st = fract(st * 10.0);
+        gl_FragColor = vec4(vec3(dist), 1.0);
+      }
+    `;
+
+    function sketch3(p) {
+      let theShader;
+
+      p.setup = function () {
+        p.createCanvas(720, 200, p.WEBGL).parent('sketch-container-3');
+        theShader = p.createShader(vertexShader, fragmentShader);
+        p.noStroke();
+      };
+
+      p.draw = function () {
+        p.background(0);
+        theShader.setUniform('resolution', [p.width, p.height]);
+        theShader.setUniform('time', p.millis() / 1000.0);
+        theShader.setUniform('mouse', [p.mouseX, p.mouseY]);
+        p.shader(theShader);
+        p.rect(-p.width / 2, -p.height / 2, p.width, p.height);
+      };
+    }
+    new p5(sketch3);
   </script>
 </body>
 </html>
