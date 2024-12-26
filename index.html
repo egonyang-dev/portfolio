@@ -63,6 +63,24 @@
       line-height: 1.5; /* 增加行高 */
       font-family:  Georgia, Times, serif;
     }
+     /* 輪播樣式 */
+    .carousel {
+      position: relative;
+      width: 90%;
+      max-width: 720px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    .carousel-images {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .carousel-images img {
+      width: 100%;
+      flex-shrink: 0;
+    }
     
     @media (max-width: 768px) {
       canvas {
@@ -120,6 +138,17 @@
   <div class="bio-text">
     Hi I'm Yang,I born in June 2000 in Changhua Taiwan, I studied design in high school and graduated from the Taiwan University of Arts. 
     Currently, I am pursuing a master's degree in Digital Content and Technologies at National Chengchi University.
+  </div>
+  <!-- 輪播圖片 -->
+  <div class="carousel">
+    <div class="carousel-images">
+      <img src="media/IMG_1DDDA126E492-1.jpeg" alt="Image 1">
+      <img src="media/IMG_3880.jpg" alt="Image 2">
+      <img src="media/IMG_3881 2.jpg" alt="Image 3">
+      <img src="media/IMG_3884.JPG" alt="Image 4">
+      <img src="media/姵Ａ1-01.png" alt="Image 5">
+      <img src="media/快馬比賽.png" alt="Image 6">
+    </div>
   </div>
   
   <script>
@@ -205,6 +234,17 @@
       };
     }
     new p5(sketch3);
+    // 圖片輪播
+    const carousel = document.querySelector('.carousel-images');
+    let index = 0;
+
+    function showNextImage() {
+      index = (index + 1) % 6; // 輪播到下一張圖片
+      const offset = -index * 100; // 計算偏移量
+      carousel.style.transform = `translateX(${offset}%)`;
+    }
+
+    setInterval(showNextImage, 3000); // 每 3 秒切換一次圖片
   </script>
 </body>
 </html>
